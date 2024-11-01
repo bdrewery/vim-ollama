@@ -58,24 +58,11 @@ function! s:HandleTabCompletion() abort
     endif
     call ollama#logger#Info("Forward <tab> to original mapping: ". string(g:ollama_original_tab_mapping))
 
-    " fallback to default tab completion if no suggestion was inserted
-    if exists('g:ollama_original_tab_mapping') && !empty(g:ollama_original_tab_mapping)
-        " If no completion and there is an original <Tab> mapping, execute it
-        if g:ollama_original_tab_mapping.expr
-            " rhs is an expression
-            call ollama#logger#Info("<tab> expression")
-            return "\<C-R>=" . g:ollama_original_tab_mapping.rhs . "\<CR>"
-        else
-            " rhs is a string
-            call ollama#logger#Info("<tab> string")
-            let tab_fallback = substitute(json_encode(g:ollama_original_tab_mapping.rhs), '<', '\\<', 'g')
-            return eval(tab_fallback)
-        endif
-    else
+
         " Default to a literal tab if there's no original mapping
         call ollama#logger#Info("<tab> literal")
         return "\<Tab>"
-    endif
+
 endfunction
 
 " Map <Tab> to insert suggestion
