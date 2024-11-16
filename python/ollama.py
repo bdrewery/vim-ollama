@@ -22,10 +22,13 @@ def setup_logging(log_file='ollama.log', log_level=logging.ERROR):
     logger.setLevel(log_level)
 
     # Create a file handler which logs even debug messages
-    if not os.path.exists('/tmp/logs'):
-        os.makedirs('/tmp/logs')
 
-    log_path = os.path.join('/tmp/logs', log_file)
+    username = os.getlogin()
+    log_dir = f'/tmp/vim-ollama-logs.{username}'
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+
+    log_path = os.path.join(log_dir, log_file)
     fh = RotatingFileHandler(log_path, maxBytes=5*1024*1024, backupCount=2)
     fh.setLevel(log_level)
 
